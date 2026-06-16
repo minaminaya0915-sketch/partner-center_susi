@@ -76,7 +76,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .section-head{max-width:46ch;margin-bottom:clamp(2.25rem,5vw,3.5rem)}
 .section-head h2{
   font-size:clamp(1.45rem,4.6vw,2.6rem);font-weight:800;line-height:1.15;
-  letter-spacing:-0.025em;margin-top:.6rem;
+  letter-spacing:-0.025em;margin-top:.6rem;word-break:keep-all;text-wrap:balance;
 }
 .section-head p{margin-top:1rem;color:var(--ink-soft);font-size:clamp(1rem,2.4vw,1.125rem)}
 
@@ -326,6 +326,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   display:grid;place-items:center;color:#fff;
 }
 .ring-svg{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+/* 링 채우기: 기본은 채워진 상태(캡쳐 안전), 스크롤 등장(.in) 시에만 0%→목표% 차오름 */
+@keyframes ringdraw{from{stroke-dashoffset:100}}
+@media (prefers-reduced-motion:no-preference){
+  [data-reveal].in .rs-fg{animation:ringdraw 1.4s var(--ease)}
+}
 @property --p{syntax:'<number>';inherits:false;initial-value:0}
 .ring::before{content:"";position:absolute;width:calc(var(--size) - 26px);height:calc(var(--size) - 26px);
   border-radius:50%;background:oklch(0.24 0.03 264)}
@@ -984,6 +989,25 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @keyframes mfade{from{opacity:0}to{opacity:1}}
 @keyframes mpop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.modal-backdrop,.modal-card{animation:none}}
+/* 섹션 헤더 우측 미니 공유 버튼 — 제목 폭은 그대로 두고 우측 상단에만 배치 */
+.section-head.sh-rel{position:relative}
+.section-head.sh-rel .mini-share{position:absolute;top:0;right:0}
+/* 공유 버튼을 제목 위 별도 줄에 우측 정렬 */
+.sh-share-top{text-align:right;margin-bottom:.5rem}
+.mini-share{flex:none;display:inline-flex;align-items:center;gap:.4em;font-size:.85rem;font-weight:700;
+  color:var(--ink-soft);background:var(--surface);padding:.5em .9em;border-radius:var(--pill);
+  box-shadow:inset 0 0 0 1.5px var(--line);cursor:pointer;white-space:nowrap;
+  transition:color .2s var(--ease),box-shadow .2s var(--ease),transform .2s var(--ease)}
+.mini-share:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line-strong);transform:translateY(-1px)}
+.mini-share svg{width:15px;height:15px}
+@media (max-width:480px){.mini-share{font-size:.8rem;padding:.45em .7em}}
+/* 페이지 공유 — 링크 복사 토스트 */
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);
+  transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;
+  font-size:.92rem;font-weight:600;padding:.7em 1.1em;border-radius:var(--pill);
+  box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;pointer-events:none;z-index:200;
+  white-space:nowrap;transition:opacity .25s var(--ease),transform .25s var(--ease),visibility .25s}
+.toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -1123,7 +1147,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         <div class="promo-vis" data-vis="1">
           <div class="mock-dash">
             <div class="mock-gauge">
-              <div class="gauge-ring" style="--p:88.6"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.4"/><circle cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.4" stroke-dasharray="88.6 100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="g-in"><b>88.6<i>%</i></b><small>합격예측 적중률</small></span></div>
+              <div class="gauge-ring" style="--p:88.6"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.4"/><circle class="rs-fg" pathLength="100" cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.4" stroke-dasharray="100" stroke-dashoffset="11.4" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="g-in"><b>88.6<i>%</i></b><small>합격예측 적중률</small></span></div>
               <div class="gauge-stats">
                 <div><b>90.5%</b><small>상위 14개 대학+의치한약수</small></div>
                 <div><b>89.5%</b><small>상위 50개 대학</small></div>
@@ -1164,10 +1188,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
   <!-- ============================ 합격 사례 ============================ -->
   <section class="wrap" id="results" style="padding-block:var(--section)">
-    <div class="section-head" data-reveal>
+    <div class="section-head sh-rel" data-reveal>
       <span class="eyebrow">결과로 증명하는 진학사</span>
-      <h2>진학사 제휴 입시상담센터가<br>왜 유명할까요?</h2>
+      <h2>진학사 제휴 입시상담센터가 왜 유명할까요?</h2>
       <p>수많은 합격 결과가 그 이유를 증명합니다.</p>
+      <button type="button" class="mini-share" onclick="sharePage()" aria-label="페이지 공유하기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+        공유하기
+      </button>
     </div>
 
     <div class="cases-grid">
@@ -1257,7 +1285,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
           <h3>진학사 합격예측이<br>지원 결정에 미친 영향력</h3>
           <p class="sub">결제자 평균</p>
           <div class="ring-wrap">
-            <div class="ring" data-ring="87.8" style="--p:87.8"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#3E4350" stroke-width="3.3"/><circle cx="18" cy="18" r="15.915" fill="none" stroke="#ffffff" stroke-width="3.3" stroke-dasharray="87.8 100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="87.8" data-dec="1">87.8</span>%</span></div>
+            <div class="ring" data-ring="87.8" style="--p:87.8"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#3E4350" stroke-width="3.3"/><circle class="rs-fg" pathLength="100" cx="18" cy="18" r="15.915" fill="none" stroke="#ffffff" stroke-width="3.3" stroke-dasharray="100" stroke-dashoffset="12.2" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="87.8" data-dec="1">87.8</span>%</span></div>
             <div class="ring-cap">
               <b>결제자 평균 영향력</b>
               진학사 합격예측이 최종 지원<br>대학 결정에 미친 영향력입니다.
@@ -1280,15 +1308,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         <h3 class="rings-head">최근 3년 합격예측 적중률<span>2024~2026학년도 기준</span></h3>
         <div class="rings">
           <div class="rcard" data-reveal data-delay="0">
-            <div class="ring2" data-ring="90.5" style="--p:90.5"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="90.5 100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="90.5" data-dec="1">90.5</span>%</span></div>
+            <div class="ring2" data-ring="90.5" style="--p:90.5"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle class="rs-fg" pathLength="100" cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="100" stroke-dashoffset="9.5" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="90.5" data-dec="1">90.5</span>%</span></div>
             <div class="label">상위 14개 대학<br>+의치한약수</div>
           </div>
           <div class="rcard" data-reveal data-delay="1">
-            <div class="ring2" data-ring="89.5" style="--p:89.5"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="89.5 100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="89.5" data-dec="1">89.5</span>%</span></div>
+            <div class="ring2" data-ring="89.5" style="--p:89.5"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle class="rs-fg" pathLength="100" cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="100" stroke-dashoffset="10.5" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="89.5" data-dec="1">89.5</span>%</span></div>
             <div class="label">상위 50개 대학</div>
           </div>
           <div class="rcard hl" data-reveal data-delay="2">
-            <div class="ring2" data-ring="88.6" style="--p:88.6"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="88.6 100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="88.6" data-dec="1">88.6</span>%</span></div>
+            <div class="ring2" data-ring="88.6" style="--p:88.6"><svg class="ring-svg" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#EDF0F5" stroke-width="3.1"/><circle class="rs-fg" pathLength="100" cx="18" cy="18" r="15.915" fill="none" stroke="#2F6FED" stroke-width="3.1" stroke-dasharray="100" stroke-dashoffset="11.4" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><span class="v tnum"><span data-count="88.6" data-dec="1">88.6</span>%</span></div>
             <div class="label">전체 대학</div>
           </div>
         </div>
@@ -1342,6 +1370,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   <section class="centers" id="apply">
     <div class="wrap" style="padding-block:var(--section)">
       <div class="section-head" style="max-width:none;text-align:center;margin-inline:auto" data-reveal>
+        <div class="sh-share-top">
+          <button type="button" class="mini-share" onclick="sharePage()" aria-label="페이지 공유하기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+            공유하기
+          </button>
+        </div>
         <span class="eyebrow">전국 11개 제휴센터</span>
         <h2>나와 가장 가까운 곳에서 만나는<br>입시상담 스페셜리스트</h2>
         <p style="margin-inline:auto">가까운 센터에서 입시 전문가와 합격을 예약하세요</p>
@@ -1696,7 +1730,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         b.setAttribute("data-ci", i);
         b.setAttribute("role","tab");
         b.setAttribute("aria-selected", active ? "true" : "false");
-        b.textContent = d.name;
+        /* 상단 고정 바는 폭이 좁아 6/5 두 줄을 위해 "센터" 떼고 짧게 표시 */
+        b.textContent = isFloat ? d.name.replace(/센터$/, "") : d.name;
         b.addEventListener("click", function(){
           selectCenter(i);
           if(isFloat){ var ap = document.getElementById("apply"); if(ap) ap.scrollIntoView({behavior:"smooth"}); } /* 플로팅에서만 스크롤 */
@@ -1935,6 +1970,32 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   }, {threshold:0.3});
   document.querySelectorAll(".people").forEach(function(el){ loose.observe(el); });
 })();
+
+/* ---- 페이지 공유 (링크 복사) ---- */
+var __toastT = null;
+function showToast(msg){
+  var t = document.getElementById("toast"); if(!t) return;
+  t.textContent = msg; t.classList.add("show");
+  if(__toastT) clearTimeout(__toastT);
+  __toastT = setTimeout(function(){ t.classList.remove("show"); }, 2000);
+}
+function sharePage(){
+  var url = location.href;
+  function ok(){ showToast("페이지 링크가 복사되었습니다"); }
+  function ng(){ window.prompt("아래 링크를 복사하세요", url); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(ok).catch(ng);
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = url; ta.setAttribute("readonly","");
+    ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); } catch(e){ ng(); }
+    document.body.removeChild(ta);
+  }
+}
 </script>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
