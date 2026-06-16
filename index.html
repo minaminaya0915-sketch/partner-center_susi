@@ -990,7 +990,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @keyframes mpop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.modal-backdrop,.modal-card{animation:none}}
 /* 섹션 헤더 우측 미니 공유 버튼 — 제목 폭은 그대로 두고 우측 상단에만 배치 */
-.section-head.sh-rel{position:relative}
+.section-head.sh-rel{position:relative;max-width:none}
+.section-head.sh-rel .sh-text{max-width:46ch}
 .section-head.sh-rel .mini-share{position:absolute;top:0;right:0}
 /* 공유 버튼을 제목 위 별도 줄에 우측 정렬 */
 .sh-share-top{text-align:right;margin-bottom:.5rem}
@@ -1189,9 +1190,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   <!-- ============================ 합격 사례 ============================ -->
   <section class="wrap" id="results" style="padding-block:var(--section)">
     <div class="section-head sh-rel" data-reveal>
-      <span class="eyebrow">결과로 증명하는 진학사</span>
-      <h2>진학사 제휴 입시상담센터가 왜 유명할까요?</h2>
-      <p>수많은 합격 결과가 그 이유를 증명합니다.</p>
+      <div class="sh-text">
+        <span class="eyebrow">결과로 증명하는 진학사</span>
+        <h2>진학사 제휴 입시상담센터가 왜 유명할까요?</h2>
+        <p>수많은 합격 결과가 그 이유를 증명합니다.</p>
+      </div>
       <button type="button" class="mini-share" onclick="sharePage()" aria-label="페이지 공유하기">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
         공유하기
