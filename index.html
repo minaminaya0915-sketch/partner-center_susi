@@ -490,9 +490,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   margin-inline:auto;max-width:720px;
 }
 .center-tabs--inline{margin-block:clamp(2rem,5vw,3rem) clamp(2.5rem,6vw,3.5rem)}
-/* 상단 고정 바(768~1699px): 6번째 탭 뒤 강제 줄바꿈 → 6+5 두 줄 */
+/* 상단 고정 바(~1699px): 6번째 탭 뒤 강제 줄바꿈 → 6+5 두 줄 (모바일 포함) */
 .center-tabbar .tab-break{display:none}
-@media (min-width:768px) and (max-width:1699px){
+@media (max-width:1699px){
   .center-tabbar .tab-break{display:block;flex-basis:100%;width:100%;height:0}
 }
 /* 데스크톱 GNB(64px) 높이에 맞춰 상단 바 위치 보정 */
@@ -521,6 +521,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @media (max-width:480px){
   .center-tabs{gap:.4rem}
   .center-tab{padding:.5em .95em;font-size:.82rem}
+}
+/* 상단 플로팅 바: 모바일에서 6개가 한 줄에 들어가도록 탭 축소 → 6+5 두 줄 */
+@media (max-width:767px){
+  .center-tabbar .center-tabs{gap:.3rem;max-width:none}
+  .center-tabbar .center-tab{padding:.45em .66em;font-size:.8rem}
 }
 
 .center-panel{animation:fade .4s var(--ease)}
