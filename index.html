@@ -1733,8 +1733,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         b.setAttribute("data-ci", i);
         b.setAttribute("role","tab");
         b.setAttribute("aria-selected", active ? "true" : "false");
-        /* 상단 고정 바는 폭이 좁아 6/5 두 줄을 위해 "센터" 떼고 짧게 표시 */
-        b.textContent = isFloat ? d.name.replace(/센터$/, "") : d.name;
+        /* 지역명 + "센터" 전체 표기 (고정 바 포함) */
+        b.textContent = d.name;
         b.addEventListener("click", function(){
           selectCenter(i);
           if(isFloat){ var ap = document.getElementById("apply"); if(ap) ap.scrollIntoView({behavior:"smooth"}); } /* 플로팅에서만 스크롤 */
