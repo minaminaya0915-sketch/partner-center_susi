@@ -495,8 +495,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   margin-inline:auto;max-width:720px;
 }
 .center-tabs--inline{margin-block:clamp(2rem,5vw,3rem) clamp(2.5rem,6vw,3.5rem)}
+/* 인라인 탭은 모든 폭에서 6+5 두 줄 고정 (6번째 뒤 강제 줄바꿈) */
+.center-tabs--inline .tab-break{display:block;flex-basis:100%;width:100%;height:0}
+/* 강제 줄바꿈 칩: 기본 숨김, 필요한 맥락에서만 표시 */
+.tab-break{display:none}
 /* 상단 고정 바(~1699px): 6번째 탭 뒤 강제 줄바꿈 → 6+5 두 줄 (모바일 포함) */
-.center-tabbar .tab-break{display:none}
 @media (max-width:1699px){
   .center-tabbar .tab-break{display:block;flex-basis:100%;width:100%;height:0}
 }
@@ -531,6 +534,18 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @media (max-width:767px){
   .center-tabbar .center-tabs{gap:.3rem;max-width:none}
   .center-tabbar .center-tab{padding:.45em .66em;font-size:.8rem}
+}
+/* 본문 인라인 센터 목록: 모바일에서 데스크톱 순서 그대로 6/5 두 줄, 가운데 정렬 */
+@media (max-width:767px){
+  .center-tabs--inline{
+    display:flex;flex-wrap:wrap;justify-content:center;align-content:center;
+    gap:.35rem;max-width:none;margin-inline:auto;padding:2px 12px 10px;
+  }
+  .center-tabs--inline .center-tab{white-space:nowrap;padding:.5em .8em;font-size:.82rem}
+}
+@media (max-width:480px){
+  .center-tabs--inline{gap:.26rem;padding:2px 8px 10px}
+  .center-tabs--inline .center-tab{padding:.42em .5em;font-size:.72rem}
 }
 
 .center-panel{animation:fade .4s var(--ease)}
@@ -1577,7 +1592,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       addr:"서울특별시 서초구 동광로15 대원빌딩 3층 엔터스카이학원",
       tels:["02-786-1127","02-591-1128","010-6276-4927"],
       etc:"문자 또는 카카오톡으로 언제든 문의하실 수 있습니다" },
-    { key:"incheon", name:"인천센터" },
+    { key:"incheon", name:"인천센터",
+      consultants:[
+        {n:"김태관", affil:"진학사 제휴 인천상담센터장", career:["현) ㈜캐슬에듀 대표원장","전) 캐슬유학 대표"]},
+        {n:"김성준", affil:"진학사 제휴 인천상담센터 컨설턴트", career:["현) 캐슬에듀 영어과 교수팀장"]},
+        {n:"이영민", affil:"진학사 제휴 인천상담센터 컨설턴트", career:["현) 캐슬에듀 영어과 고3 대표강사"]},
+        {n:"차성빈", affil:"진학사 제휴 인천상담센터 컨설턴트", career:["현) 캐슬에듀 수학과 원장"]},
+        {n:"방희진", affil:"진학사 제휴 인천상담센터 컨설턴트", career:["현) 캐슬에듀 수학과 교수팀장"]}
+      ],
+      intro:"교육을 통해 학생들의 미래를 함께 설계합니다. 단순한 지식 전달을 넘어 학생 스스로 사고하고 문제를 해결하며 자신의 길을 주도적으로 개척할 수 있도록 돕고, 한 명 한 명의 가능성을 살펴 노력의 방향이 올바른 성장으로 이어지도록 체계적인 학습 방향을 제시합니다.",
+      addr:"인천광역시 서구 청라에메랄드로 94 청라빌딩 402~405, 804~805호",
+      tels:["032-567-2308"] },
     { key:"goyang",  name:"고양센터",
       consultants:[
         {n:"오현주", affil:"진학사 제휴 고양센터장", career:["현) 꿈을이루는자들의 비전학원장","현) 서일영어학원 연신내캠퍼스 대표"]},
@@ -1603,8 +1628,26 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       tels:["031-268-1311","031-271-0880","010-9534-1411"],
       hours:"<span class='tw'>주중 14:00~22:00</span> <span class='tw'>주말 10:00~22:00</span>",
       etc:"그 외 연락처는 별도 안내드립니다" },
-    { key:"yongin",  name:"용인센터" },
-    { key:"hwaseong", name:"화성센터" },
+    { key:"yongin",  name:"용인센터",
+      consultants:[
+        {n:"박혜란", affil:"진학사 제휴 용인상담센터장", career:["현) 광교 리케이온 원장","전) 광교 아발론교육 원장"], img:"https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/yongin-1.png"},
+        {n:"양정호", affil:"진학사 제휴 용인상담센터 컨설턴트", career:["현) 314 고등수학 원장","현) 그릿PT 진로진학 팀장"], img:"https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/yongin-2.png"},
+        {n:"심찬보", affil:"진학사 제휴 용인상담센터 컨설턴트", career:["현) 314 고등수학 진학연구소장","전) 김샘수학 진로진학팀장"], img:"https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/yongin-3.png"},
+        {n:"문승균", affil:"진학사 제휴 용인상담센터 컨설턴트", career:["현) 그릿PT 대입 상담실장","전) 영재사관학원 특목·자사 입시컨설팅 팀장"]},
+        {n:"김훈", affil:"진학사 제휴 용인상담센터 컨설턴트", career:["현) 광교 리케이온 특목·자사 입시컨설턴트","전) 성지학원 부원장"]}
+      ],
+      intro:"진학사 합격예측서비스 데이터와 다년간 축적된 경기지역 입시 데이터·상담 노하우를 기반으로 학생 개개인에게 최적화된 입시상담을 제공합니다. 지속적인 대외 교육과 사례 중심 회의를 통해 컨설팅 전략을 체계적으로 수립하여, 서울 주요 입시기관까지 이동하지 않아도 용인 지역에서 신뢰도 높은 입시상담을 받을 수 있도록 지원합니다.",
+      addr:"경기도 용인시 수지구 광교중앙로 315, 3층",
+      tels:["031-8081-1100"] },
+    { key:"hwaseong", name:"화성센터",
+      consultants:[
+        {n:"김수화", affil:"진학사 제휴 화성상담센터장", career:["현) 미지원에듀 진로진학연구소 소장"]},
+        {n:"임문석", affil:"진학사 제휴 화성상담센터 수석컨설턴트", career:["현) 투모라이즈 입시 수석팀장","전) 학생부관리 프로그램 개발 PM"], img:"https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/hwaseong-2.png"},
+        {n:"이충훈", affil:"진학사 제휴 화성상담센터 컨설턴트", career:["현) 대치미래인재교육 객원 연구원","현) 대치라포에듀 대입컨설턴트"]}
+      ],
+      intro:"학생 한 명 한 명의 가능성을 끝까지 믿습니다. 성적보다 과정을, 결과보다 성장을 먼저 바라보며 학생이 스스로의 힘으로 나아갈 수 있도록 함께합니다. 성적은 일시적일 수 있지만 바른 태도와 꾸준한 노력은 평생을 지탱하는 힘이 된다는 믿음으로, 더욱 책임감 있게 학생들과 함께하겠습니다.",
+      addr:"경기도 화성시 영통로 59 현대프라자 413~415호",
+      tels:["031-204-0608"] },
     { key:"sejong",  name:"세종센터",
       consultants:[
         {n:"송지원", affil:"진학사 제휴 세종센터장", career:["현) 베이교육컨설팅 대표","현) 라이프디자인교육연구소 이사"]},
@@ -1615,7 +1658,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       tels:["044-867-9706"] },
     { key:"daejeon", name:"대전센터",
       consultants:[
-        {n:"이용국", affil:"진학사 제휴 대전센터 컨설턴트", career:["현) 제일입시연구소장","현) 제일구술면접연구소 SKY팀장"]},
+        {n:"이용국", affil:"진학사 제휴 대전상담센터장", career:["현) 제일입시연구소장","현) 제일구술면접연구소 SKY팀장"]},
         {n:"이종혁", affil:"진학사 제휴 대전센터 컨설턴트", career:["현) 제일입시연구소 수석팀장","현) 제일구술면접연구소 컨설턴트"]},
         {n:"이윤구", affil:"진학사 제휴 대전센터 컨설턴트", career:["현) 제일입시연구소 수석팀장","현) 제일구술면접연구소 컨설턴트"]},
         {n:"윤상희", affil:"진학사 제휴 대전센터 컨설턴트", career:["현) 제일입시연구소 컨설턴트","현) 제일구술면접연구소 컨설턴트"]},
@@ -1650,7 +1693,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         {n:"최주혜", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) 행복한 3월 입시컨설턴트","현) 네이버 Expert 컨설턴트 (정시 1위)"]},
         {n:"손대성", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) 대학미래연구소 팀장","현) 서초구 양재내곡교육센터 대입 컨설턴트"]},
         {n:"박정훈", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) 입시투데이컨설팅학원장","현) 조선일보 입시칼럼니스트"]},
-        {n:"나리입시", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) 나리입시컨설팅 대표","전) 서울대 약학대학 컨설팅팀 SUM 대표"]},
+        {n:"정주영", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) 대치 입시투데이 입시컨설턴트","현) 대치 이루리학원 입시컨설턴트"], img:"https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/dmoments-5.png"},
         {n:"김현정", affil:"진학사 제휴 결정적E순간 컨설턴트", career:["현) Smart&Easy 미래인재 대표","현) 한국교육컨설턴트 협회 컨설턴트"]}
       ],
       introTitle:"결정적E순간 (온라인 상담)",
@@ -1682,7 +1725,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       }
       var career = (p.career||[]).map(function(c){ return '<li>' + esc(c) + '</li>'; }).join("");
       return '<article class="consultant ' + (p.feature ? "feature " : "") + 'g' + ((i%6)+1) + '">'
-        + '<div class="avatar"><img src="https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/' + (d.imgKey||d.key) + '-' + (i+1) + '.jpg" alt="' + esc(p.n) + '" loading="lazy"></div>'
+        + '<div class="avatar"><img src="' + (p.img || ('https://image.jinhak.com/jinhakImages/jh/consulting/center/consultant/' + (d.imgKey||d.key) + '-' + (i+1) + '.jpg')) + '" alt="' + esc(p.n) + '" loading="lazy"></div>'
         + '<div class="cname">' + esc(p.n) + '<span class="role">컨설턴트</span></div>'
         + '<div class="affil">' + esc(p.affil) + '</div>'
         + (career ? '<ul class="career">' + career + '</ul>' : '') + '</article>';
@@ -1740,8 +1783,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
           if(isFloat){ var ap = document.getElementById("apply"); if(ap) ap.scrollIntoView({behavior:"smooth"}); } /* 플로팅에서만 스크롤 */
         });
         listEl.appendChild(b);
-        /* 상단 고정 바: 6번째 탭 뒤 강제 줄바꿈 → 6+5 두 줄 */
-        if(isFloat && i === 5){ var brk = document.createElement("span"); brk.className = "tab-break"; listEl.appendChild(brk); }
+        /* 6번째 탭 뒤 강제 줄바꿈 → 6+5 두 줄 (고정 바 + 모바일 인라인 공통, 표시 여부는 CSS가 제어) */
+        if(i === 5){ var brk = document.createElement("span"); brk.className = "tab-break"; listEl.appendChild(brk); }
       });
     });
     panelEl.innerHTML = renderCenter(def);
