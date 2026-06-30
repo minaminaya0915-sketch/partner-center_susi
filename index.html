@@ -530,10 +530,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   .center-tabs{gap:.4rem}
   .center-tab{padding:.5em .95em;font-size:.82rem}
 }
-/* 상단 플로팅 바: 모바일에서 6개가 한 줄에 들어가도록 탭 축소 → 6+5 두 줄 */
+/* 상단 플로팅 바: 모바일에서 각 탭을 1줄 6칸 균등폭으로 고정 → 이름이 길어도 6+5 두 줄 유지 */
 @media (max-width:767px){
   .center-tabbar .center-tabs{gap:.3rem;max-width:none}
-  .center-tabbar .center-tab{padding:.45em .66em;font-size:.8rem}
+  .center-tabbar .center-tab{
+    flex:0 0 calc((100% - 1.5rem) / 6);   /* gap .3rem × 5 = 1.5rem */
+    min-width:0;padding:.5em .25em;font-size:.78rem;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+}
+@media (max-width:420px){
+  .center-tabbar .center-tab{font-size:.72rem;padding-inline:.15em}
 }
 /* 본문 인라인 센터 목록: 모바일에서 데스크톱 순서 그대로 6/5 두 줄, 가운데 정렬 */
 @media (max-width:767px){
@@ -688,8 +695,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 }
 .online-banner{margin-top:clamp(2rem,5vw,2.75rem);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .online-banner img{width:100%;display:block}
-.center-cta{margin-top:clamp(2rem,5vw,2.75rem);text-align:center}
+.center-cta{margin-top:clamp(2rem,5vw,2.75rem);display:flex;flex-direction:column;align-items:center;gap:.7rem}
 .center-cta .btn{width:100%;max-width:420px;padding:1.1em 1.5em;font-size:1.05rem}
+.cta-desc{max-width:520px;margin:0 auto .35rem;color:var(--ink-soft);font-size:.94rem;
+  line-height:1.6;text-align:center;word-break:keep-all}
+.cta-desc b{color:var(--accent);font-weight:800}
+/* ≤480px: 버튼 클릭 시 바로 전화 연결 → 안내 문구 전환 */
+.cta-desc--mo{display:none}
+@media (max-width:480px){
+  .cta-desc--pc{display:none}
+  .cta-desc--mo{display:block}
+}
 
 .center-empty{
   text-align:center;padding:clamp(3rem,9vw,5rem) 1.5rem;background:var(--canvas);
@@ -991,8 +1007,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .modal-x:hover{background:var(--surface-sunk);color:var(--ink)}
 .modal-x svg{width:18px;height:18px}
 .modal-title{font-size:1.25rem;font-weight:800;letter-spacing:-0.02em}
-.modal-msg{margin-top:.55rem;color:var(--ink-soft);line-height:1.6;word-break:keep-all}
-.modal-msg .m-center{color:var(--accent);font-weight:800}
+.modal-center{margin-top:.8rem;word-break:keep-all}
+.modal-center .m-center{color:var(--accent);font-weight:800;font-size:1.2rem}
 .modal-tels{display:flex;flex-direction:column;gap:.5rem;margin:1.3rem 0}
 .modal-tels a{display:flex;align-items:center;justify-content:center;gap:.5em;
   padding:.8em 1em;border-radius:var(--pill);background:var(--surface-sunk);
@@ -1000,7 +1016,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   transition:background-color .2s var(--ease),transform .2s var(--ease)}
 .modal-tels a:hover{background:var(--accent-tint);transform:translateY(-1px)}
 .modal-tels a svg{width:17px;height:17px;color:var(--accent)}
-.modal-card .btn-ghost{width:100%}
+.modal-card .btn{width:100%}
 @keyframes mfade{from{opacity:0}to{opacity:1}}
 @keyframes mpop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.modal-backdrop,.modal-card{animation:none}}
@@ -1466,6 +1482,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
           </div>
 
           <div class="center-cta" id="center-apply">
+            <p class="cta-desc cta-desc--pc">상담은 <b>서초센터</b>에서 직접 진행되는 방문·대면 상담입니다.<br>아래 버튼을 눌러 센터로 문의해 주세요.</p>
+            <p class="cta-desc cta-desc--mo">상담은 <b>서초센터</b>에서 직접 진행되는 방문·대면 상담입니다.<br>버튼을 누르면 <b>서초센터</b>로 바로 전화 연결됩니다.</p>
             <button type="button" class="btn btn-accent js-apply" data-center="서초센터" data-tels="02-786-1127,02-591-1128,010-6276-4927">서초센터 상담 신청하기</button>
           </div>
         </div>
@@ -1558,10 +1576,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <button type="button" class="modal-x" data-close aria-label="닫기">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
-    <h3 class="modal-title" id="applyTitle">상담 신청 안내</h3>
-    <p class="modal-msg">상담 신청은 <b class="m-center">센터</b>로<br>아래 번호로 직접 문의해 주세요.</p>
+    <h3 class="modal-title" id="applyTitle">상담은 센터로 직접<br>문의해 주세요</h3>
+    <p class="modal-center"><b class="m-center">센터</b></p>
     <div class="modal-tels" id="modalTels"></div>
-    <button type="button" class="btn btn-ghost" data-close>닫기</button>
+    <button type="button" class="btn btn-accent modal-ok" data-close>확인</button>
   </div>
 </div>
 
@@ -1738,7 +1756,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         + '<div class="center-intro"><h4>' + esc(d.introTitle) + '</h4><p>' + d.intro + '</p></div>'
         + '<div class="consultants">' + cards + '</div>'
         + '<div class="online-banner"><img src="https://image.jinhak.com/jinhakImages/jh/consulting/center/map/dmoments-img-pc.jpg" alt="진학사 제휴 온라인센터 · 결정적E순간 · 상담문의 1544-9139" loading="lazy"></div>'
-        + '<div class="center-cta" id="center-apply"><a class="btn btn-accent" href="' + d.landing + '" target="_blank" rel="noopener">' + esc(d.name) + ' 상담 신청하기</a></div>'
+        + '<div class="center-cta" id="center-apply">'
+        + '<p class="cta-desc">온라인 <b>비대면 화상 상담</b>으로 진행됩니다.<br>아래 버튼을 눌러 예약 페이지에서 신청해 주세요.</p>'
+        + '<a class="btn btn-accent" href="' + d.landing + '" target="_blank" rel="noopener">' + esc(d.name) + ' 상담 신청하기</a></div>'
         + '</div>';
     }
     return '<div class="center-panel">'
@@ -1752,7 +1772,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       + (d.etc ? '<div class="row etc-row"><span>' + d.etc + '</span></div>' : '')
       + '</dl></div></div>'
       + '<div class="consultants">' + cards + '</div>'
-      + (d.landing ? '<div class="center-cta"><a class="btn btn-accent" href="' + d.landing + '" target="_blank" rel="noopener">' + esc(d.name) + ' 홈페이지 바로가기</a></div>' : '')
+      + '<div class="center-cta">'
+      + '<p class="cta-desc cta-desc--pc">상담은 <b>' + esc(d.name) + '</b>에서 직접 진행되는 방문·대면 상담입니다.<br>아래 버튼을 눌러 센터로 문의해 주세요.</p>'
+      + '<p class="cta-desc cta-desc--mo">상담은 <b>' + esc(d.name) + '</b>에서 직접 진행되는 방문·대면 상담입니다.<br>버튼을 누르면 <b>' + esc(d.name) + '</b>로 바로 전화 연결됩니다.</p>'
+      + '<button type="button" class="btn btn-accent js-apply" data-center="' + esc(d.name) + '" data-tels="' + esc(d.tels.join(",")) + '">' + esc(d.name) + ' 상담 신청하기</button>'
+      + (d.landing ? '<a class="btn btn-ghost" href="' + d.landing + '" target="_blank" rel="noopener">' + esc(d.name) + ' 홈페이지 바로가기</a>' : '')
+      + '</div>'
       + '</div>';
   }
 
@@ -1991,7 +2016,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     document.addEventListener("click", function(e){
       var trg = e.target.closest ? e.target.closest(".js-apply") : null;
       if(trg){ e.preventDefault();
-        openModal(trg.getAttribute("data-center") || "센터", (trg.getAttribute("data-tels") || "").split(",").filter(Boolean));
+        var tels = (trg.getAttribute("data-tels") || "").split(",").map(function(s){ return s.trim(); }).filter(Boolean);
+        /* 모바일(≤480px): 모달 대신 첫 번호로 바로 전화 연결 */
+        if(window.innerWidth <= 480 && tels.length){ window.location.href = "tel:" + tels[0]; return; }
+        openModal(trg.getAttribute("data-center") || "센터", tels);
         return;
       }
       if(e.target.closest && e.target.closest("[data-close]")) closeModal();
